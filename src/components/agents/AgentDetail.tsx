@@ -46,11 +46,12 @@ export const AgentDetail = () => {
   const agent = data?.agent;
   const agentPrompt = data?.prompt;
   const runAgentMutation = useRunAgent(agentId);
-  const { isRunning, lastResult } = useAgentStore();
+  const { isRunning } = useAgentStore();
 
   const [userPrompt, setUserPrompt] = useState("");
   const [email, setEmail] = useState("");
   const [isFullScreenOpen, setIsFullScreenOpen] = useState(false);
+  const [currentResult, setCurrentResult] = useState<string | null>(null);
 
   // Handle escape key to close modal
   useEffect(() => {
@@ -86,10 +87,12 @@ export const AgentDetail = () => {
     }
 
     try {
-      await runAgentMutation.mutateAsync({
+      const result = await runAgentMutation.mutateAsync({
         prompt: userPrompt.trim(),
         user_email: email.trim(),
       });
+      // Store result in local state instead of global store
+      setCurrentResult(result.response || "Response generated successfully");
 
       // Clear form on success
       setUserPrompt("");
@@ -99,8 +102,8 @@ export const AgentDetail = () => {
   };
 
   const handleCopyResult = () => {
-    if (lastResult) {
-      navigator.clipboard.writeText(lastResult);
+    if (currentResult) {
+      navigator.clipboard.writeText(currentResult);
       toast.success("Result copied to clipboard!");
     }
   };
@@ -286,7 +289,7 @@ export const AgentDetail = () => {
                   Agent Response
                 </CardTitle>
 
-                {lastResult && (
+                {currentResult && (
                   <div className="flex gap-2">
                     <Button
                       variant="outline"
@@ -322,7 +325,7 @@ export const AgentDetail = () => {
                 </div>
               )}
 
-              {!isRunning && !lastResult && (
+              {!isRunning && !currentResult && (
                 <div className="flex items-center justify-center py-12">
                   <div className="text-center text-gray-500">
                     <Bot className="h-12 w-12 mx-auto mb-3 opacity-30" />
@@ -331,7 +334,7 @@ export const AgentDetail = () => {
                 </div>
               )}
 
-              {!isRunning && lastResult && (
+              {!isRunning && currentResult && (
                 <div className="space-y-4">
                   <div className="flex items-center gap-2 text-sm text-green-600">
                     <CheckCircle className="h-4 w-4" />
@@ -342,7 +345,7 @@ export const AgentDetail = () => {
 
                   <ScrollArea className="h-96 w-full border rounded-md">
                     <div className="p-4">
-                      <MarkdownRenderer content={lastResult} />
+                      <MarkdownRenderer content={currentResult} />
                     </div>
                   </ScrollArea>
                 </div>
@@ -394,7 +397,9 @@ export const AgentDetail = () => {
               <div className="flex-1 min-h-0 p-6">
                 <ScrollArea className="h-full w-full border rounded-md">
                   <div className="p-6">
-                    {lastResult && <MarkdownRenderer content={lastResult} />}
+                    {currentResult && (
+                      <MarkdownRenderer content={currentResult} />
+                    )}
                   </div>
                 </ScrollArea>
               </div>
