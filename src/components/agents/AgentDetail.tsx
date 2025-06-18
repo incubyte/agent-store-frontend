@@ -230,7 +230,7 @@ export const AgentDetail = () => {
                   <Label htmlFor="prompt">Your Prompt</Label>
                   <Textarea
                     id="prompt"
-                    placeholder={data.prompt || "Type your prompt here..."}
+                    placeholder={agentPrompt || "Type your prompt here..."}
                     value={userPrompt}
                     onChange={(e) => setUserPrompt(e.target.value)}
                     className="min-h-32 resize-none"
@@ -394,9 +394,7 @@ export const AgentDetail = () => {
               <div className="flex-1 min-h-0 p-6">
                 <ScrollArea className="h-full w-full border rounded-md">
                   <div className="p-6">
-                    {lastResult && (
-                      <MarkdownRenderer content={lastResult} />
-                    )}
+                    {lastResult && <MarkdownRenderer content={lastResult} />}
                   </div>
                 </ScrollArea>
               </div>
