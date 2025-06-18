@@ -174,10 +174,6 @@ export const AgentDetail = () => {
                   <CardTitle className="text-2xl font-bold text-gray-900">
                     {agent.name}
                   </CardTitle>
-                  <Badge className="bg-secondary/10 text-secondary-foreground border-secondary/20">
-                    <Bot className="h-3 w-3 mr-1" />
-                    AI Agent
-                  </Badge>
                 </div>
 
                 <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">

@@ -64,14 +64,6 @@ export const AgentCard = ({ agent }: AgentCardProps) => {
         </CardDescription>
 
         <div className="flex items-center justify-between">
-          <Badge
-            variant="secondary"
-            className="bg-secondary/10 text-secondary-foreground border-secondary/20"
-          >
-            <Bot className="h-3 w-3 mr-1" />
-            Agent
-          </Badge>
-
           <Button
             asChild
             size="sm"
