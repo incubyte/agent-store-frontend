@@ -3,7 +3,7 @@ import { AgentDetail } from '@/components/agents/AgentDetail';
 
 export const AgentDetailPage = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       <Header />
       <main>
         <AgentDetail />

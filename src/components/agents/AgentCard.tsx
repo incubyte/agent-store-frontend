@@ -9,7 +9,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { Agent } from "@/types";
 
@@ -33,52 +32,50 @@ export const AgentCard = ({ agent }: AgentCardProps) => {
   };
 
   return (
-    <Card className="group hover:shadow-lg hover:shadow-secondary/20 transition-all duration-300 hover:-translate-y-1 border-gray-200 hover:border-secondary/30 bg-white flex flex-col h-full">
-      <CardHeader className="pb-3">
-        <div className="flex items-start gap-3">
-          <Avatar className="h-12 w-12 border-2 border-primary/10">
-            <AvatarImage src={agent.image} alt={agent.name} />
-            <AvatarFallback className="bg-gradient-to-br from-primary to-primary/80 text-white font-semibold">
-              {agent.name
-                .split(" ")
-                .map((n) => n[0])
-                .join("")
-                .slice(0, 2)}
-            </AvatarFallback>
-          </Avatar>
-          <div className="flex-1 min-w-0">
-            <CardTitle className="text-lg font-semibold text-gray-900 group-hover:text-primary transition-colors">
-              {agent.name}
-            </CardTitle>
-            <div className="flex items-center gap-2 mt-1">
-              <Calendar className="h-3 w-3 text-gray-400" />
-              <span className="text-xs text-gray-500">{formattedDate}</span>
+    <Link to={`/agents/${agent.id}`} className="block h-full">
+      <Card className="group h-full flex flex-col transition-all duration-200 border border-gray-200 hover:border-secondary/40 hover:bg-gray-50/50 cursor-pointer">
+        <CardHeader className="pb-3">
+          <div className="flex items-start gap-3">
+            <Avatar className="h-12 w-12 border-2 border-gray-100">
+              <AvatarImage src={agent.image} alt={agent.name} />
+              <AvatarFallback className="bg-gradient-to-br from-primary to-secondary text-white font-semibold text-sm">
+                {agent.name
+                  .split(" ")
+                  .map((n) => n[0])
+                  .join("")
+                  .slice(0, 2)}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex-1 min-w-0">
+              <CardTitle className="text-lg font-bold text-primary group-hover:text-secondary transition-colors">
+                {agent.name}
+              </CardTitle>
+              <div className="flex items-center gap-2 mt-1">
+                <Calendar className="h-3 w-3 text-gray-400" />
+                <span className="text-xs text-gray-500">{formattedDate}</span>
+              </div>
             </div>
           </div>
-        </div>
-      </CardHeader>
+        </CardHeader>
 
-      <CardContent className="pt-0 flex flex-col flex-grow">
-        <CardDescription className="text-sm text-gray-600 mb-4 line-clamp-3 leading-relaxed flex-grow">
-          {truncateDescription(agent.description)}
-        </CardDescription>
+        <CardContent className="pt-0 flex flex-col flex-grow">
+          <CardDescription className="text-sm text-gray-600 mb-6 line-clamp-3 leading-relaxed flex-grow">
+            {truncateDescription(agent.description)}
+          </CardDescription>
 
-        <div className="flex items-center justify-between">
-          <Button
-            asChild
-            size="sm"
-            className="bg-primary hover:bg-primary/90 text-white shadow-sm group-hover:shadow-md transition-all"
-          >
-            <Link
-              to={`/agents/${agent.id}`}
-              className="flex items-center gap-2"
+          <div className="flex items-center justify-between">
+            <Button
+              size="sm"
+              className="bg-primary hover:bg-primary/90 text-white font-medium px-4 py-2 rounded-md transition-colors pointer-events-none"
             >
-              Execute Agent
-              <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-            </Link>
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+              <span className="flex items-center gap-2">
+                Execute Agent
+                <ArrowRight className="h-4 w-4" />
+              </span>
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </Link>
   );
 };

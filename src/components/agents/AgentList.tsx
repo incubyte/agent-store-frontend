@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Search, Filter, RefreshCw } from "lucide-react";
+import { Search, SlidersHorizontal, RefreshCw } from "lucide-react";
 import { AgentCard } from "./AgentCard";
 import { AgentCardSkeleton } from "./AgentCardSkeleton";
 import { Input } from "@/components/ui/input";
@@ -56,10 +56,10 @@ export const AgentList = () => {
     return (
       <div className="flex flex-col items-center justify-center py-16 px-4">
         <div className="text-center max-w-md">
-          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <RefreshCw className="h-8 w-8 text-red-600" />
+          <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+            <RefreshCw className="h-8 w-8 text-red-500" />
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+          <h3 className="text-lg font-semibold text-primary mb-2">
             Connection Error
           </h3>
           <p className="text-gray-600 mb-4">{error.message}</p>
@@ -75,44 +75,48 @@ export const AgentList = () => {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Search and Filter Bar */}
-      <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
-        <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-          <Input
-            placeholder="Search agents..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 border-gray-300 focus:border-primary focus:ring-primary"
-          />
-        </div>
-
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <Filter className="h-4 w-4 text-gray-500" />
-            <Select
-              value={sortBy}
-              onValueChange={(value: "newest" | "oldest" | "alphabetical") =>
-                setSortBy(value)
-              }
-            >
-              <SelectTrigger className="w-40 border-gray-300">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="newest">Newest First</SelectItem>
-                <SelectItem value="oldest">Oldest First</SelectItem>
-                <SelectItem value="alphabetical">A-Z</SelectItem>
-              </SelectContent>
-            </Select>
+    <div className="space-y-8">
+      {/* Compact Search and Filter Bar */}
+      <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+        <div className="flex flex-col sm:flex-row gap-3 items-center">
+          {/* Search Input */}
+          <div className="relative flex-1 max-w-md">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Input
+              placeholder="Search agents..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 h-10 border-gray-300 focus:border-secondary focus:ring-secondary/20"
+            />
           </div>
 
-          {agents && (
-            <span className="text-sm text-gray-500 whitespace-nowrap">
-              {filteredAndSortedAgents.length} of {agents.length} agents
-            </span>
-          )}
+          {/* Filter and Count */}
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              <SlidersHorizontal className="h-4 w-4 text-gray-500" />
+              <Select
+                value={sortBy}
+                onValueChange={(value: "newest" | "oldest" | "alphabetical") =>
+                  setSortBy(value)
+                }
+              >
+                <SelectTrigger className="w-32 h-10 border-gray-300 text-sm">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="newest">Newest</SelectItem>
+                  <SelectItem value="oldest">Oldest</SelectItem>
+                  <SelectItem value="alphabetical">A-Z</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {agents && (
+              <div className="text-sm text-gray-500 whitespace-nowrap px-2 py-1 bg-gray-50 rounded">
+                {filteredAndSortedAgents.length} of {agents.length}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -129,10 +133,10 @@ export const AgentList = () => {
       {!isLoading && filteredAndSortedAgents.length === 0 && (
         <div className="flex flex-col items-center justify-center py-16 px-4">
           <div className="text-center max-w-md">
-            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
               <Search className="h-8 w-8 text-gray-400" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            <h3 className="text-lg font-semibold text-primary mb-2">
               {searchQuery ? "No agents found" : "No agents available"}
             </h3>
             <p className="text-gray-600">
@@ -144,7 +148,7 @@ export const AgentList = () => {
               <Button
                 variant="outline"
                 onClick={() => setSearchQuery("")}
-                className="mt-4"
+                className="mt-4 border-gray-300 text-primary hover:bg-primary/5"
               >
                 Clear Search
               </Button>

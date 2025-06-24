@@ -15,6 +15,32 @@ export default {
         sm: 'calc(var(--radius) - 4px)',
       },
       colors: {
+        // Incubyte brand colors
+        primary: {
+          DEFAULT: '#0d3253',
+          50: '#f0f7fb',
+          100: '#e1eff7',
+          200: '#c3dfef',
+          300: '#a5cfe7',
+          400: '#87bfdf',
+          500: '#5cc5d5',
+          600: '#0d3253',
+          700: '#0a2842',
+          800: '#081f32',
+          900: '#051521',
+        },
+        cyan: {
+          DEFAULT: '#5cc5d5',
+          400: '#5cc5d5',
+          500: '#4ab5c5',
+          600: '#3aa5b5',
+        },
+        accent: {
+          DEFAULT: '#cbdf7a',
+          400: '#cbdf7a',
+          500: '#bbcf6a',
+          600: '#abbf5a',
+        },
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {
@@ -77,6 +103,13 @@ export default {
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'fade-in-up': 'fadeInUp 0.6s ease-out',
+        'float': 'float 3s ease-in-out infinite',
+      },
+      spacing: {
+        '18': '4.5rem',
+        '88': '22rem',
+        '128': '32rem',
       },
     },
   },
