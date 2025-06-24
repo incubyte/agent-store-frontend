@@ -8,6 +8,11 @@ export interface Agent {
   updated_at: string;
 }
 
+export interface AgentWithPrompt {
+  agent: Agent;
+  prompt: string;
+}
+
 export interface RunAgentRequest {
   prompt: string;
   user_email: string;

@@ -1,76 +1,118 @@
-import { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Bot, Calendar, Mail, Send, Copy, Loader2, AlertCircle, CheckCircle } from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import {
+  Bot,
+  Calendar,
+  Mail,
+  Send,
+  Copy,
+  Loader2,
+  AlertCircle,
+  CheckCircle,
+  Maximize2,
+  X,
+} from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Separator } from '@/components/ui/separator';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Separator } from "@/components/ui/separator";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
-import { useAgent } from '@/hooks/useAgents';
-import { useRunAgent } from '@/hooks/useRunAgent';
-import { useAgentStore } from '@/store/useAgentStore';
-import { toast } from 'sonner';
+import { useAgent } from "@/hooks/useAgents";
+import { useRunAgent } from "@/hooks/useRunAgent";
+import { useAgentStore } from "@/store/useAgentStore";
+import { MarkdownRenderer } from "./MarkdownRenderer";
+import { toast } from "sonner";
 
 export const AgentDetail = () => {
   const { id } = useParams<{ id: string }>();
-  const agentId = parseInt(id || '0', 10);
-  
-  const { data: agent, isLoading, error } = useAgent(agentId);
+  const agentId = parseInt(id ?? "0", 10);
+
+  const { data, isLoading, error } = useAgent(agentId);
+  const agent = data?.agent;
+  const agentPrompt = data?.prompt;
   const runAgentMutation = useRunAgent(agentId);
-  const { isRunning, lastResult } = useAgentStore();
-  
-  const [prompt, setPrompt] = useState('');
-  const [email, setEmail] = useState('');
+  const { isRunning } = useAgentStore();
+
+  const [userPrompt, setUserPrompt] = useState("");
+  const [email, setEmail] = useState("");
+  const [isFullScreenOpen, setIsFullScreenOpen] = useState(false);
+  const [currentResult, setCurrentResult] = useState<string | null>(null);
+
+  // Handle escape key to close modal
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && isFullScreenOpen) {
+        setIsFullScreenOpen(false);
+      }
+    };
+
+    if (isFullScreenOpen) {
+      document.addEventListener("keydown", handleEscape);
+      // Prevent body scroll when modal is open
+      document.body.style.overflow = "hidden";
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = "unset";
+    };
+  }, [isFullScreenOpen]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!prompt.trim()) {
-      toast.error('Please enter a prompt');
+
+    if (!userPrompt.trim()) {
+      toast.error("Please enter a prompt");
       return;
     }
-    
-    if (!email.trim() || !email.includes('@')) {
-      toast.error('Please enter a valid email address');
+
+    if (!email.trim() || !email.includes("@")) {
+      toast.error("Please enter a valid email address");
       return;
     }
 
     try {
-      await runAgentMutation.mutateAsync({
-        prompt: prompt.trim(),
+      const result = await runAgentMutation.mutateAsync({
+        prompt: userPrompt.trim(),
         user_email: email.trim(),
       });
-      
+      // Store result in local state instead of global store
+      setCurrentResult(result.response || "Response generated successfully");
+
       // Clear form on success
-      setPrompt('');
+      setUserPrompt("");
     } catch (error) {
-      // Error handling is done in the mutation
+      console.error("Error running agent:", error);
+      toast.error(
+        error instanceof Error ? error.message : "Failed to run agent"
+      );
     }
   };
 
   const handleCopyResult = () => {
-    if (lastResult) {
-      navigator.clipboard.writeText(lastResult);
-      toast.success('Result copied to clipboard!');
+    if (currentResult) {
+      navigator.clipboard.writeText(currentResult);
+      toast.success("Result copied to clipboard!");
     }
   };
 
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <div className="animate-pulse space-y-6">
             <div className="h-8 bg-gray-200 rounded w-1/4"></div>
             <div className="h-64 bg-gray-200 rounded"></div>
@@ -84,11 +126,11 @@ export const AgentDetail = () => {
   if (error || !agent) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <Alert className="border-red-200 bg-red-50">
             <AlertCircle className="h-4 w-4 text-red-600" />
             <AlertDescription className="text-red-800">
-              {error?.message || 'Agent not found'}
+              {error?.message ?? "Agent not found"}
             </AlertDescription>
           </Alert>
         </div>
@@ -96,20 +138,14 @@ export const AgentDetail = () => {
     );
   }
 
-  const formattedDate = formatDistanceToNow(new Date(agent.created_at), { addSuffix: true });
+  const formattedDate = formatDistanceToNow(new Date(agent.created_at), {
+    addSuffix: true,
+  });
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="max-w-4xl mx-auto space-y-8">
+      <div className="max-w-7xl mx-auto space-y-8">
         {/* Header */}
-        <div className="flex items-center gap-4 mb-8">
-          <Button variant="outline" size="sm" asChild>
-            <Link to="/agents" className="flex items-center gap-2">
-              <ArrowLeft className="h-4 w-4" />
-              Back to Agents
-            </Link>
-          </Button>
-        </div>
 
         {/* Agent Info */}
         <Card className="border-gray-200 bg-white">
@@ -118,26 +154,28 @@ export const AgentDetail = () => {
               <Avatar className="h-16 w-16 border-2 border-primary/20">
                 <AvatarImage src={agent.image} alt={agent.name} />
                 <AvatarFallback className="bg-gradient-to-br from-primary to-primary/80 text-white text-lg font-semibold">
-                  {agent.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                  {agent.name
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")
+                    .slice(0, 2)}
                 </AvatarFallback>
               </Avatar>
-              
+
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
-                  <CardTitle className="text-2xl font-bold text-gray-900">{agent.name}</CardTitle>
-                  <Badge className="bg-secondary/10 text-secondary-foreground border-secondary/20">
-                    <Bot className="h-3 w-3 mr-1" />
-                    AI Agent
-                  </Badge>
+                  <CardTitle className="text-2xl font-bold text-gray-900">
+                    {agent.name}
+                  </CardTitle>
                 </div>
-                
+
                 <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
                   <div className="flex items-center gap-1">
                     <Calendar className="h-4 w-4" />
                     Created {formattedDate}
                   </div>
                 </div>
-                
+
                 {agent.description && (
                   <CardDescription className="text-gray-600 leading-relaxed">
                     {agent.description}
@@ -161,7 +199,7 @@ export const AgentDetail = () => {
                 Enter your prompt and email to interact with this agent
               </CardDescription>
             </CardHeader>
-            
+
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
@@ -179,27 +217,27 @@ export const AgentDetail = () => {
                     />
                   </div>
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="prompt">Your Prompt</Label>
                   <Textarea
                     id="prompt"
-                    placeholder="Enter your prompt or question for this agent..."
-                    value={prompt}
-                    onChange={(e) => setPrompt(e.target.value)}
+                    placeholder={agentPrompt ?? "Type your prompt here..."}
+                    value={userPrompt}
+                    onChange={(e) => setUserPrompt(e.target.value)}
                     className="min-h-32 resize-none"
                     required
                   />
                   <div className="flex justify-between text-xs text-gray-500">
-                    <span>{prompt.length} characters</span>
+                    <span>{userPrompt.length} characters</span>
                     <span>Be specific for better results</span>
                   </div>
                 </div>
-                
+
                 <div className="flex gap-3 pt-2">
-                  <Button 
-                    type="submit" 
-                    disabled={isRunning || !prompt.trim() || !email.trim()}
+                  <Button
+                    type="submit"
+                    disabled={isRunning || !userPrompt.trim() || !email.trim()}
                     className="flex-1 bg-primary hover:bg-primary/90"
                   >
                     {isRunning ? (
@@ -214,11 +252,14 @@ export const AgentDetail = () => {
                       </>
                     )}
                   </Button>
-                  
-                  <Button 
-                    type="button" 
-                    variant="outline" 
-                    onClick={() => { setPrompt(''); setEmail(''); }}
+
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      setUserPrompt("");
+                      setEmail("");
+                    }}
                     disabled={isRunning}
                   >
                     Clear
@@ -236,12 +277,20 @@ export const AgentDetail = () => {
                   <Bot className="h-5 w-5 text-secondary" />
                   Agent Response
                 </CardTitle>
-                
-                {lastResult && (
+
+                {currentResult && (
                   <div className="flex gap-2">
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setIsFullScreenOpen(true)}
+                      className="border-secondary/20 hover:bg-secondary/5"
+                    >
+                      <Maximize2 className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
                       onClick={handleCopyResult}
                       className="border-secondary/20 hover:bg-secondary/5"
                     >
@@ -251,19 +300,21 @@ export const AgentDetail = () => {
                 )}
               </div>
             </CardHeader>
-            
+
             <CardContent>
               {isRunning && (
                 <div className="flex items-center justify-center py-12">
                   <div className="text-center">
                     <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto mb-3" />
                     <p className="text-gray-600">Processing your request...</p>
-                    <p className="text-sm text-gray-500 mt-1">This may take a few moments</p>
+                    <p className="text-sm text-gray-500 mt-1">
+                      This may take a few moments
+                    </p>
                   </div>
                 </div>
               )}
-              
-              {!isRunning && !lastResult && (
+
+              {!isRunning && !currentResult && (
                 <div className="flex items-center justify-center py-12">
                   <div className="text-center text-gray-500">
                     <Bot className="h-12 w-12 mx-auto mb-3 opacity-30" />
@@ -271,42 +322,19 @@ export const AgentDetail = () => {
                   </div>
                 </div>
               )}
-              
-              {!isRunning && lastResult && (
+
+              {!isRunning && currentResult && (
                 <div className="space-y-4">
                   <div className="flex items-center gap-2 text-sm text-green-600">
                     <CheckCircle className="h-4 w-4" />
                     Response generated successfully
                   </div>
-                  
+
                   <Separator />
-                  
-                  <ScrollArea className="max-h-96 w-full">
-                    <div className="prose prose-sm max-w-none">
-                      <ReactMarkdown
-                        remarkPlugins={[remarkGfm]}
-                        components={{
-                          code({ node, inline, className, children, ...props }: any) {
-                            const match = /language-(\w+)/.exec(className || '');
-                            return !inline && match ? (
-                              <SyntaxHighlighter
-                                style={oneDark}
-                                language={match[1]}
-                                PreTag="div"
-                                {...props}
-                              >
-                                {String(children).replace(/\n$/, '')}
-                              </SyntaxHighlighter>
-                            ) : (
-                              <code className={className} {...props}>
-                                {children}
-                              </code>
-                            );
-                          },
-                        }}
-                      >
-                        {lastResult}
-                      </ReactMarkdown>
+
+                  <ScrollArea className="h-96 w-full border rounded-md">
+                    <div className="p-4">
+                      <MarkdownRenderer content={currentResult} />
                     </div>
                   </ScrollArea>
                 </div>
@@ -314,6 +342,59 @@ export const AgentDetail = () => {
             </CardContent>
           </Card>
         </div>
+
+        {/* Full Screen Modal */}
+        {isFullScreenOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center">
+            {/* Backdrop */}
+            <div
+              className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+              onClick={() => setIsFullScreenOpen(false)}
+            />
+
+            {/* Modal Content */}
+            <div className="relative w-[95vw] h-[95vh] bg-white rounded-lg shadow-2xl flex flex-col">
+              {/* Header */}
+              <div className="flex items-center justify-between p-6 border-b border-gray-200">
+                <div className="flex items-center gap-2">
+                  <Bot className="h-5 w-5 text-secondary" />
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    Agent Response
+                  </h2>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleCopyResult}
+                    className="border-secondary/20 hover:bg-secondary/5"
+                  >
+                    <Copy className="h-4 w-4 mr-2" />
+                    Copy
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setIsFullScreenOpen(false)}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+
+              {/* Content */}
+              <div className="flex-1 min-h-0 p-6">
+                <ScrollArea className="h-full w-full border rounded-md">
+                  <div className="p-6">
+                    {currentResult && (
+                      <MarkdownRenderer content={currentResult} />
+                    )}
+                  </div>
+                </ScrollArea>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
