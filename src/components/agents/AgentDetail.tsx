@@ -38,7 +38,7 @@ import { toast } from "sonner";
 
 export const AgentDetail = () => {
   const { id } = useParams<{ id: string }>();
-  const agentId = parseInt(id || "0", 10);
+  const agentId = parseInt(id ?? "0", 10);
 
   const { data, isLoading, error } = useAgent(agentId);
   const agent = data?.agent;
@@ -95,7 +95,10 @@ export const AgentDetail = () => {
       // Clear form on success
       setUserPrompt("");
     } catch (error) {
-      // Error handling is done in the mutation
+      console.error("Error running agent:", error);
+      toast.error(
+        error instanceof Error ? error.message : "Failed to run agent"
+      );
     }
   };
 
@@ -127,7 +130,7 @@ export const AgentDetail = () => {
           <Alert className="border-red-200 bg-red-50">
             <AlertCircle className="h-4 w-4 text-red-600" />
             <AlertDescription className="text-red-800">
-              {error?.message || "Agent not found"}
+              {error?.message ?? "Agent not found"}
             </AlertDescription>
           </Alert>
         </div>
@@ -219,7 +222,7 @@ export const AgentDetail = () => {
                   <Label htmlFor="prompt">Your Prompt</Label>
                   <Textarea
                     id="prompt"
-                    placeholder={agentPrompt || "Type your prompt here..."}
+                    placeholder={agentPrompt ?? "Type your prompt here..."}
                     value={userPrompt}
                     onChange={(e) => setUserPrompt(e.target.value)}
                     className="min-h-32 resize-none"
