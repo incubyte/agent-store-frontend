@@ -6,7 +6,8 @@ import type {
   RunAgentResponse,
 } from "@/types";
 
-const API_BASE_URL = "http://localhost:8000/";
+// Load base URL from environment variable, fallback to localhost
+const API_BASE_URL = import.meta.env.VITE_BASE_URL;
 
 const api = axios.create({
   baseURL: API_BASE_URL,
