@@ -79,11 +79,14 @@ export const AgentDetail = () => {
       return;
     }
 
-    if (!email.trim() || !email.includes("@")) {
-      toast.error("Please enter a valid email address");
-      return;
+    if (email.trim()) {
+      // Validate email format
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailPattern.test(email)) {
+        toast.error("Please enter a valid email address");
+        return;
+      }
     }
-
     try {
       const result = await runAgentMutation.mutateAsync({
         prompt: userPrompt.trim(),
@@ -203,22 +206,6 @@ export const AgentDetail = () => {
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email Address</Label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="your.email@example.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="pl-10"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
                   <Label htmlFor="prompt">Your Prompt</Label>
                   <Textarea
                     id="prompt"
@@ -234,10 +221,25 @@ export const AgentDetail = () => {
                   </div>
                 </div>
 
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email Address</Label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="your.email@example.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="pl-10"
+                    />
+                  </div>
+                </div>
+
                 <div className="flex gap-3 pt-2">
                   <Button
                     type="submit"
-                    disabled={isRunning || !userPrompt.trim() || !email.trim()}
+                    disabled={isRunning || !userPrompt.trim()}
                     className="flex-1 bg-primary hover:bg-primary/90"
                   >
                     {isRunning ? (
