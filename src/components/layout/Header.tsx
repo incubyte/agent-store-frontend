@@ -1,4 +1,4 @@
-import { Bot, Home } from "lucide-react";
+import { Home } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import IncubyteLogo from "@/components/icons/incubyte.logo";
