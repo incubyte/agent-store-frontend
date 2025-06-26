@@ -1,6 +1,7 @@
-import { Bot, Home } from "lucide-react";
+import { Home } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import IncubyteLogo from "@/components/icons/incubyte.logo";
 
 export const Header = () => {
   const isNotAgentPage = window.location.pathname !== "/agents";
@@ -15,13 +16,8 @@ export const Header = () => {
             to="/"
             className="flex items-center gap-3 hover:opacity-80 transition-opacity"
           >
-            <div className="flex items-center justify-center w-10 h-10 bg-primary rounded-sm">
-              <Bot className="h-6 w-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-primary">
-                Incubyte AI Platform
-              </h1>
+            <div className="flex flex-col justify-start items-start">
+              <IncubyteLogo />
               <p className="text-sm text-gray-500">
                 Intelligent AI Agents at Your Service
               </p>

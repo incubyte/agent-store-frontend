@@ -35,6 +35,7 @@ import { useRunAgent } from "@/hooks/useRunAgent";
 import { useAgentStore } from "@/store/useAgentStore";
 import { MarkdownRenderer } from "./MarkdownRenderer";
 import { toast } from "sonner";
+import IncubyteLeaf from "../icons/incubyteLeaf";
 
 export const AgentDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -276,8 +277,8 @@ export const AgentDetail = () => {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle className="flex items-center gap-2">
-                  <Bot className="h-5 w-5 text-secondary" />
-                  Agent Response
+                  <IncubyteLeaf />
+                  {agent.name} Response
                 </CardTitle>
 
                 {currentResult && (
