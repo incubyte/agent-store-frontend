@@ -17,7 +17,6 @@ export const useAgent = (agentId: number) => {
     queryKey: ["agent", agentId],
     queryFn: async () => {
       const data: AgentWithPrompt = await agentApi.getAgent(agentId);
-      console.log("Fetched agent data in hook:", data);
       return {
         agent: data.agent,
         prompt: data.prompt || "",
