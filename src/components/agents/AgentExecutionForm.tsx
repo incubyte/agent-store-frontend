@@ -90,6 +90,7 @@ export const AgentExecutionForm = ({
               onChange={(e) => setUserPrompt(e.target.value)}
               className="min-h-32 resize-none"
               required
+              disabled={isRunning}
             />
             <div className="flex justify-between text-xs text-gray-500">
               <span>{userPrompt.length} characters</span>
@@ -108,6 +109,7 @@ export const AgentExecutionForm = ({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="pl-10"
+                disabled={isRunning}
               />
             </div>
           </div>
