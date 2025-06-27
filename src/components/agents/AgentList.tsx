@@ -75,10 +75,10 @@ export const AgentList = () => {
   }
 
   return (
-    <div className="space-y-8">
-      {/* Search and Filter Bar */}
-      <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-        <div className="flex flex-col sm:flex-row gap-4 items-center">
+    <div className="space-y-6">
+      {/* Search and Filter Bar - Hidden for now */}
+      <div className="hidden bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+        <div className="flex flex-col sm:flex-row gap-3 items-center">
           {/* Search Input */}
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -86,7 +86,7 @@ export const AgentList = () => {
               placeholder="Search agents..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 h-10 border-gray-300 focus:border-primary focus:ring-primary/20 rounded-md"
+              className="pl-10 h-9 border-gray-300 focus:border-primary focus:ring-primary/20 rounded-md"
             />
           </div>
 
@@ -100,7 +100,7 @@ export const AgentList = () => {
                   setSortBy(value)
                 }
               >
-                <SelectTrigger className="w-32 h-10 border-gray-300 text-sm">
+                <SelectTrigger className="w-32 h-9 border-gray-300 text-sm">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>

@@ -5,9 +5,7 @@ export const AgentDetailPage = () => {
   return (
     <div className="min-h-screen bg-white">
       <Header />
-      <main>
-        <AgentDetail />
-      </main>
+      <AgentDetail />
     </div>
   );
 };
