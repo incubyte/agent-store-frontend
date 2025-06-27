@@ -51,42 +51,39 @@ export const AgentCard = ({ agent }: AgentCardProps) => {
       className="block h-full"
       onClick={handleCardClick}
     >
-      <Card className="group h-full flex flex-col transition-all duration-200 border border-gray-200 hover:border-blue-400 hover:shadow-2xl cursor-pointer overflow-hidden rounded-xl min-h-[320px] shadow-lg">
-        {/* Header Section with Solid Navy Background */}
-        <div
-          className="px-4 py-3 flex items-center justify-between"
-          style={{ backgroundColor: "#0d3253" }}
-        >
-          <div className="flex-1 pr-3">
-            <CardTitle className="text-lg font-semibold text-white mb-0 leading-tight drop-shadow-sm">
-              {agent.name}
-            </CardTitle>
-          </div>
-          <div className="bg-white/90 text-gray-800 w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs shadow-lg backdrop-blur-sm">
-            {getAgentInitials(agent.name)}
+      <Card className="h-full flex flex-col transition-all duration-200 border border-gray-200 hover:border-gray-300 hover:shadow-lg cursor-pointer overflow-hidden rounded-lg min-h-[320px] bg-white">
+        {/* Header Section */}
+        <div className="px-6 py-4 bg-gray-50 border-b border-gray-100">
+          <div className="flex items-center justify-between">
+            <div className="flex-1">
+              <CardTitle className="text-lg font-semibold text-primary mb-0 leading-tight">
+                {agent.name}
+              </CardTitle>
+            </div>
+            <div className="bg-primary text-white w-10 h-10 rounded-lg flex items-center justify-center font-semibold text-sm">
+              {getAgentInitials(agent.name)}
+            </div>
           </div>
         </div>
 
         {/* Content Section */}
-        <CardContent className="p-6 flex flex-col flex-grow bg-white">
-          <CardDescription className="text-base text-gray-700 mb-6 line-clamp-4 leading-relaxed flex-grow">
-            {truncateDescription(agent.description, 180)}
+        <CardContent className="p-6 flex flex-col flex-grow">
+          <CardDescription className="text-gray-600 mb-6 line-clamp-4 leading-relaxed flex-grow">
+            {truncateDescription(agent.description, 160)}
           </CardDescription>
 
           {/* Date Section */}
-          <div className="flex items-center gap-2 mb-6">
-            <Calendar className="h-4 w-4 text-gray-400" />
-            <span className="text-sm text-gray-500">{formattedDate}</span>
+          <div className="flex items-center gap-2 mb-6 text-sm text-gray-500">
+            <Calendar className="h-4 w-4" />
+            <span>{formattedDate}</span>
           </div>
 
-          {/* Bottom section with divider line and button */}
-          <div className="mt-auto">
-            <div className="w-full h-px bg-cyan-300 mb-4"></div>
+          {/* Button Section */}
+          <div className="mt-auto pt-4 border-t border-gray-100">
             <div className="flex justify-end">
               <Button
-                size="default"
-                className="text-white font-medium px-6 py-3 rounded-md shadow-lg border border-white/30 pointer-events-auto hover:bg-blue-800 transition-colors duration-200"
-                style={{ backgroundColor: "#0d3253" }}
+                size="sm"
+                className="bg-primary hover:bg-primary/90 text-white font-medium px-4 py-2 rounded-md transition-colors"
               >
                 Execute Agent
               </Button>

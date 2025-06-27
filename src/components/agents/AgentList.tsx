@@ -76,9 +76,9 @@ export const AgentList = () => {
 
   return (
     <div className="space-y-8">
-      {/* Compact Search and Filter Bar */}
-      <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
-        <div className="flex flex-col sm:flex-row gap-3 items-center">
+      {/* Search and Filter Bar */}
+      <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+        <div className="flex flex-col sm:flex-row gap-4 items-center">
           {/* Search Input */}
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -86,12 +86,12 @@ export const AgentList = () => {
               placeholder="Search agents..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 h-10 border-gray-300 focus:border-secondary focus:ring-secondary/20"
+              className="pl-10 h-10 border-gray-300 focus:border-primary focus:ring-primary/20 rounded-md"
             />
           </div>
 
           {/* Filter and Count */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
               <SlidersHorizontal className="h-4 w-4 text-gray-500" />
               <Select
@@ -112,7 +112,7 @@ export const AgentList = () => {
             </div>
 
             {agents && (
-              <div className="text-sm text-gray-500 whitespace-nowrap px-2 py-1 bg-gray-50 rounded">
+              <div className="text-sm text-gray-600 whitespace-nowrap px-3 py-1 bg-gray-50 rounded border">
                 {filteredAndSortedAgents.length} of {agents.length}
               </div>
             )}
@@ -139,7 +139,7 @@ export const AgentList = () => {
             <h3 className="text-lg font-semibold text-primary mb-2">
               {searchQuery ? "No agents found" : "No agents available"}
             </h3>
-            <p className="text-gray-600">
+            <p className="text-gray-600 mb-4">
               {searchQuery
                 ? `Try adjusting your search for "${searchQuery}"`
                 : "Check back later for new AI agents."}
@@ -148,7 +148,7 @@ export const AgentList = () => {
               <Button
                 variant="outline"
                 onClick={() => setSearchQuery("")}
-                className="mt-4 border-gray-300 text-primary hover:bg-primary/5"
+                className="border-gray-300 text-primary hover:bg-primary/5"
               >
                 Clear Search
               </Button>
