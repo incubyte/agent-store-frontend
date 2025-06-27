@@ -21,12 +21,16 @@ export const AgentCard = ({ agent }: AgentCardProps) => {
 
   const truncateDescription = (
     text: string | undefined,
-    maxLength: number = 180
+    maxLength: number = 150
   ) => {
     if (!text) return "No description available";
-    return text.length > maxLength
-      ? `${text.substring(0, maxLength)}...`
-      : text;
+    
+    // Remove the "Key Capabilities:" section from the description for display
+    let cleanText = text.replace(/Key Capabilities:\s*[^.]+\.?\s*/i, '').trim();
+    
+    return cleanText.length > maxLength
+      ? `${cleanText.substring(0, maxLength)}...`
+      : cleanText;
   };
 
   const getAgentInitials = (name: string) => {
@@ -38,29 +42,25 @@ export const AgentCard = ({ agent }: AgentCardProps) => {
       .toUpperCase();
   };
 
-  const getAgentCapabilities = (name: string) => {
-    // Generate relevant capabilities based on agent name/type
-    const capabilities = [
-      "Automated data processing",
-      "Real-time analysis",
-      "Intelligent decision making",
-      "Workflow optimization",
-      "24/7 operation",
-      "Error reduction",
-      "Performance monitoring",
-      "Custom integrations"
-    ];
+  const getAgentCapabilities = (description: string | undefined) => {
+    if (!description) return [];
     
-    // Return 3 capabilities based on agent name hash
-    const hash = name.split('').reduce((a, b) => a + b.charCodeAt(0), 0);
-    return [
-      capabilities[hash % capabilities.length],
-      capabilities[(hash + 1) % capabilities.length],
-      capabilities[(hash + 2) % capabilities.length]
-    ];
+    // Look for "Key Capabilities:" followed by comma-separated list
+    const capabilitiesMatch = description.match(/Key Capabilities:\s*([^.]+)/i);
+    
+    if (capabilitiesMatch) {
+      return capabilitiesMatch[1]
+        .split(',')
+        .map(cap => cap.trim())
+        .filter(cap => cap.length > 0)
+        .slice(0, 3); // Limit to 3 capabilities
+    }
+    
+    return [];
   };
 
-  const capabilities = getAgentCapabilities(agent.name);
+
+  const capabilities = getAgentCapabilities(agent.description);
 
   const handleCardClick = () => {
     // Reset scroll position before navigation
@@ -93,22 +93,24 @@ export const AgentCard = ({ agent }: AgentCardProps) => {
       {/* Content Section */}
       <CardContent className="p-4 flex flex-col flex-grow">
         {/* Description */}
-        <CardDescription className="text-gray-600 mb-3 line-clamp-2 leading-relaxed text-sm">
-          {truncateDescription(agent.description, 100)}
+        <CardDescription className="text-gray-600 mb-3 leading-relaxed text-sm">
+          {truncateDescription(agent.description, 150)}
         </CardDescription>
 
         {/* Key Capabilities */}
-        <div className="mb-4">
-          <h4 className="text-xs font-semibold text-gray-900 mb-2">Key Capabilities</h4>
-          <div className="space-y-1">
-            {capabilities.map((capability, index) => (
-              <div key={index} className="flex items-center gap-2 text-xs text-gray-600">
-                <CheckCircle className="h-3 w-3 text-green-500 flex-shrink-0" />
-                <span>{capability}</span>
-              </div>
-            ))}
+        {capabilities.length > 0 && (
+          <div className="mb-4">
+            <h4 className="text-xs font-semibold text-gray-900 mb-2">Key Capabilities</h4>
+            <div className="space-y-1">
+              {capabilities.map((capability, index) => (
+                <div key={index} className="flex items-center gap-2 text-xs text-gray-600">
+                  <CheckCircle className="h-3 w-3 text-green-500 flex-shrink-0" />
+                  <span>{capability}</span>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Date and Actions */}
         <div className="mt-auto">
