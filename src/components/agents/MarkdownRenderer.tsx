@@ -12,7 +12,7 @@ export const MarkdownRenderer = ({
   className = "",
 }: MarkdownRendererProps) => {
   return (
-    <div className={`prose prose-sm max-w-none ${className}`}>
+    <div className={`prose prose-sm max-w-none overflow-auto ${className}`}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={markdownComponents}

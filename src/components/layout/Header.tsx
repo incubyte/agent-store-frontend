@@ -10,12 +10,9 @@ export const Header = () => {
     <header
       className={`border-b border-gray-200 sticky top-0 z-50 transition-all duration-300 "bg-white/95 backdrop-blur-sm`}
     >
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
-          <Link
-            to="/"
-            className="flex items-center gap-3 hover:opacity-80 transition-opacity"
-          >
+      <div className="container mx-auto px-4 py-3">
+        <div className="flex items-center justify-between max-w-7xl mx-auto">
+          <Link to="/" className="flex items-center gap-3">
             <div className="flex flex-col justify-start items-start">
               <IncubyteLogo />
               <p className="text-sm text-gray-500">
