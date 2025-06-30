@@ -1,4 +1,4 @@
-import { Calendar, Zap, ArrowRight, Clock, CheckCircle } from "lucide-react";
+import { Zap, ArrowRight, Clock, CheckCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
 import {
@@ -24,41 +24,33 @@ export const AgentCard = ({ agent }: AgentCardProps) => {
     maxLength: number = 150
   ) => {
     if (!text) return "No description available";
-    
+
     // Remove the "Key Capabilities:" section from the description for display
-    let cleanText = text.replace(/Key Capabilities:\s*[^.]+\.?\s*/i, '').trim();
-    
+    const cleanText = text
+      .replace(/Key Capabilities:\s*[^.]+\.?\s*/i, "")
+      .trim();
+
     return cleanText.length > maxLength
       ? `${cleanText.substring(0, maxLength)}...`
       : cleanText;
   };
 
-  const getAgentInitials = (name: string) => {
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .slice(0, 2)
-      .toUpperCase();
-  };
-
   const getAgentCapabilities = (description: string | undefined) => {
     if (!description) return [];
-    
+
     // Look for "Key Capabilities:" followed by comma-separated list
     const capabilitiesMatch = description.match(/Key Capabilities:\s*([^.]+)/i);
-    
+
     if (capabilitiesMatch) {
       return capabilitiesMatch[1]
-        .split(',')
-        .map(cap => cap.trim())
-        .filter(cap => cap.length > 0)
+        .split(",")
+        .map((cap) => cap.trim())
+        .filter((cap) => cap.length > 0)
         .slice(0, 3); // Limit to 3 capabilities
     }
-    
+
     return [];
   };
-
 
   const capabilities = getAgentCapabilities(agent.description);
 
@@ -83,7 +75,9 @@ export const AgentCard = ({ agent }: AgentCardProps) => {
                 <CardTitle className="text-base font-bold text-gray-900 mb-0 leading-tight">
                   {agent.name}
                 </CardTitle>
-                <div className="text-xs text-gray-500 font-medium">AI Agent</div>
+                <div className="text-xs text-gray-500 font-medium">
+                  AI Agent
+                </div>
               </div>
             </div>
           </div>
@@ -100,10 +94,15 @@ export const AgentCard = ({ agent }: AgentCardProps) => {
         {/* Key Capabilities */}
         {capabilities.length > 0 && (
           <div className="mb-4">
-            <h4 className="text-xs font-semibold text-gray-900 mb-2">Key Capabilities</h4>
+            <h4 className="text-xs font-semibold text-gray-900 mb-2">
+              Key Capabilities
+            </h4>
             <div className="space-y-1">
               {capabilities.map((capability, index) => (
-                <div key={index} className="flex items-center gap-2 text-xs text-gray-600">
+                <div
+                  key={index}
+                  className="flex items-center gap-2 text-xs text-gray-600"
+                >
                   <CheckCircle className="h-3 w-3 text-green-500 flex-shrink-0" />
                   <span>{capability}</span>
                 </div>
@@ -123,7 +122,7 @@ export const AgentCard = ({ agent }: AgentCardProps) => {
 
           {/* Action Button */}
           <Link to={`/agents/${agent.id}`} onClick={handleCardClick}>
-            <Button 
+            <Button
               size="sm"
               className="w-full bg-primary hover:bg-primary/90 text-white font-medium group-hover:shadow-md transition-all"
             >

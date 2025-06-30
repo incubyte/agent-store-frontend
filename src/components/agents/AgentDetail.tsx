@@ -1,16 +1,15 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { Calendar, AlertCircle, Zap, CheckCircle, ArrowLeft } from "lucide-react";
+import {
+  Calendar,
+  AlertCircle,
+  Zap,
+  CheckCircle,
+  ArrowLeft,
+} from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { Link } from "react-router-dom";
 
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 
@@ -36,21 +35,21 @@ export const AgentDetail = () => {
     // Generate relevant capabilities based on agent name/type
     const capabilities = [
       "Automated data processing",
-      "Real-time analysis", 
+      "Real-time analysis",
       "Intelligent decision making",
       "Workflow optimization",
       "24/7 operation",
       "Error reduction",
       "Performance monitoring",
-      "Custom integrations"
+      "Custom integrations",
     ];
-    
+
     // Return 3 capabilities based on agent name hash
-    const hash = name.split('').reduce((a, b) => a + b.charCodeAt(0), 0);
+    const hash = name.split("").reduce((a, b) => a + b.charCodeAt(0), 0);
     return [
       capabilities[hash % capabilities.length],
       capabilities[(hash + 1) % capabilities.length],
-      capabilities[(hash + 2) % capabilities.length]
+      capabilities[(hash + 2) % capabilities.length],
     ];
   };
 
@@ -119,9 +118,7 @@ export const AgentDetail = () => {
               {/* AI Agent Badge */}
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full mb-4">
                 <Zap className="h-4 w-4 text-secondary" />
-                <span className="text-sm font-medium text-white">
-                  AI Agent
-                </span>
+                <span className="text-sm font-medium text-white">AI Agent</span>
               </div>
 
               {/* Agent Name */}
@@ -131,15 +128,21 @@ export const AgentDetail = () => {
 
               {/* Agent Description */}
               <p className="text-lg text-gray-300 leading-relaxed mb-6">
-                {agent.description || "An intelligent AI agent designed to automate tasks and boost productivity."}
+                {agent.description ||
+                  "An intelligent AI agent designed to automate tasks and boost productivity."}
               </p>
 
               {/* Key Capabilities */}
               <div className="mb-4">
-                <h3 className="text-sm font-semibold text-white mb-3">Key Capabilities</h3>
+                <h3 className="text-sm font-semibold text-white mb-3">
+                  Key Capabilities
+                </h3>
                 <div className="space-y-1">
                   {capabilities.map((capability, index) => (
-                    <div key={index} className="flex items-center gap-2 text-sm text-gray-300">
+                    <div
+                      key={index}
+                      className="flex items-center gap-2 text-sm text-gray-300"
+                    >
                       <CheckCircle className="h-4 w-4 text-secondary flex-shrink-0" />
                       <span>{capability}</span>
                     </div>
@@ -164,8 +167,8 @@ export const AgentDetail = () => {
             {/* Back button */}
             <div className="mb-8">
               <Link to="/agents">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   className="border-gray-300 text-gray-700 hover:bg-gray-50"
                 >
                   <ArrowLeft className="h-4 w-4 mr-2" />
