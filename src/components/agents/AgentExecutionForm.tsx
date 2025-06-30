@@ -37,9 +37,15 @@ export const AgentExecutionForm = ({
       return;
     }
 
+    if (!email.trim()) {
+      toast.error("Please enter an email address");
+      return;
+    }
+
     if (email.trim()) {
       // Validate email format
-      const emailPattern = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
+      console.log("Validating email:", email);
+      const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
       if (!emailPattern.test(email)) {
         toast.error("Please enter a valid email address");
         return;
@@ -51,7 +57,7 @@ export const AgentExecutionForm = ({
         prompt: userPrompt.trim(),
         email: email.trim(),
       });
-      
+
       // Clear form on success
       setUserPrompt("");
       setEmail("");
@@ -110,6 +116,7 @@ export const AgentExecutionForm = ({
                 onChange={(e) => setEmail(e.target.value)}
                 className="pl-10"
                 disabled={isRunning}
+                required
               />
             </div>
           </div>
@@ -117,7 +124,7 @@ export const AgentExecutionForm = ({
           <div className="flex gap-3 pt-2">
             <Button
               type="submit"
-              disabled={isRunning || !userPrompt.trim()}
+              disabled={isRunning || !userPrompt.trim() || !email.trim()}
               className="flex-1 bg-primary hover:bg-primary/90"
             >
               {isRunning ? (
