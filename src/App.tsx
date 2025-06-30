@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/sonner';
 import { AgentsPage } from '@/pages/AgentsPage';
 import { AgentDetailPage } from '@/pages/AgentDetailPage';
+import { ArticlePage } from '@/pages/ArticlePage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -28,6 +29,7 @@ function App() {
             <Route path="/" element={<Navigate to="/agents" replace />} />
             <Route path="/agents" element={<AgentsPage />} />
             <Route path="/agents/:id" element={<AgentDetailPage />} />
+            <Route path="/article/ai-workforce-revolution" element={<ArticlePage />} />
           </Routes>
           <Toaster position="top-right" />
         </div>
