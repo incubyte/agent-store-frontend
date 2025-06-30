@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import type { Agent } from "@/types";
+import { useNavigate } from "react-router-dom";
 
 interface AgentCardProps {
   agent: Agent;
@@ -53,16 +54,20 @@ export const AgentCard = ({ agent }: AgentCardProps) => {
   };
 
   const capabilities = getAgentCapabilities(agent.description);
+  const navigate = useNavigate();
 
   const handleCardClick = () => {
-    // Reset scroll position before navigation
+    navigate(`/agents/${agent.id}`);
     setTimeout(() => {
       window.scrollTo(0, 0);
     }, 100);
   };
 
   return (
-    <Card className="h-full flex flex-col transition-all duration-300 border border-gray-200 hover:border-gray-300 hover:shadow-xl cursor-pointer overflow-hidden rounded-xl min-h-[300px] bg-white group">
+    <Card
+      onClick={handleCardClick}
+      className="h-full flex flex-col transition-all duration-300 border border-gray-200 hover:border-gray-300 hover:shadow-xl cursor-pointer overflow-hidden rounded-xl min-h-[300px] bg-white group"
+    >
       {/* Header with gradient background */}
       <div className="relative px-4 py-4 bg-gradient-to-br from-gray-50 to-gray-100 border-b border-gray-200">
         <div className="flex items-start justify-between">
@@ -121,7 +126,7 @@ export const AgentCard = ({ agent }: AgentCardProps) => {
           </div>
 
           {/* Action Button */}
-          <Link to={`/agents/${agent.id}`} onClick={handleCardClick}>
+          <Link to={`/agents/${agent.id}`}>
             <Button
               size="sm"
               className="w-full bg-primary hover:bg-primary/90 text-white font-medium group-hover:shadow-md transition-all"
