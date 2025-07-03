@@ -94,7 +94,7 @@ export const AgentExecutionForm = ({
               placeholder={agentPrompt ?? "Type your prompt here..."}
               value={userPrompt}
               onChange={(e) => setUserPrompt(e.target.value)}
-              className="min-h-32 resize-none"
+              className="min-h-32 resize-none placeholder:italic placeholder:font-extralight"
               required
               disabled={isRunning}
             />
@@ -114,7 +114,7 @@ export const AgentExecutionForm = ({
                 placeholder="your.email@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="pl-10"
+                className="pl-10 placeholder:italic placeholder:font-extralight"
                 disabled={isRunning}
                 required
               />
